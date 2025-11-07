@@ -1,6 +1,5 @@
-package ua.ucu.edu.Emerald.config;
+package ua.ucu.edu.Emerald.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -39,20 +38,26 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
-            // User exists, update their name if it's different
             User existingUser = userOptional.get();
-            if (!existingUser.getName().equals(name)) {
-                existingUser.setName(name);
+            boolean changed = false;
+            if (!existingUser.getFirstName().equals(firstName)) {
+                existingUser.setFirstName(firstName);
+                changed = true;
+            }
+            if (!existingUser.getLastName().equals(lastName)) {
+                existingUser.setLastName(lastName);
+                changed = true;
+            }
+            if (changed) {
                 return userRepository.save(existingUser);
             }
             return existingUser;
         } else {
-            // User does not exist, create a new one
             User newUser = new User();
             newUser.setEmail(email);
-            newUser.setName(name);
+            newUser.setFirstName(firstName);
+            newUser.setLastName(lastName);
             newUser.setProviderId(providerId);
-            // 'createdAt' is set by default in the entity
             return userRepository.save(newUser);
         }
     }

@@ -22,14 +22,17 @@ public class User {
     @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String providedId;
+    private Long id;
+    private String providerId;
+    @Getter
+    @Setter
     @Column(name = "firstname")
     private String firstName;
+    @Getter
+    @Setter
     @Column(name = "lastname")
     private String lastName;
     private String email;
     @Column(name = "phonenumber")
     private String phoneNumber;
-    private Long id;
 }

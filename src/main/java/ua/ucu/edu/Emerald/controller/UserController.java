@@ -1,35 +1,49 @@
 package ua.ucu.edu.Emerald.controller;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
 
 import ua.ucu.edu.Emerald.entity.User;
-import ua.ucu.edu.Emerald.service.UserService;
+import ua.ucu.edu.Emerald.repository.UserRepository;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
-    private UserService userService;
+    private final UserRepository userRepository;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    @GetMapping("/user")
-    public User findUserByEmail(String email) {
-        return userService.findUserByEmail(email);
-    }
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal OAuth2User principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-    @PostMapping("/user")
-    public User createUser(@RequestBody User user){
-        return userService.createUser(user.getId(), user.getProvidedId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber());
-    }
+        String email = principal.getAttribute("email");
 
-    @DeleteMapping("/user")
-    public void deleteUser(@PathVariable String email) {
-        userService.deleteUser(email);
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found in local database.");
+        }
+
+        User appUser = userOptional.get();
+
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("id", appUser.getId());
+        userDetails.put("first_name", appUser.getFirstName());
+        userDetails.put("last_name", appUser.getLastName());
+        userDetails.put("email", appUser.getEmail());
+
+        return ResponseEntity.ok(userDetails);
     }
 }
