@@ -25,8 +25,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String email = oAuth2User.getAttribute("email");
-        String firstName = oAuth2User.getAttribute("firstname");
-        String lastName = oAuth2User.getAttribute("lastname");
+        String firstName = oAuth2User.getAttribute("given_name");
+        String lastName = oAuth2User.getAttribute("family_name");
         String providerId = oAuth2User.getName();
 
         processUserLogin(email, firstName, lastName, providerId);
@@ -39,19 +39,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         if (userOptional.isPresent()) {
             User existingUser = userOptional.get();
-            boolean changed = false;
-            if (!existingUser.getFirstName().equals(firstName)) {
-                existingUser.setFirstName(firstName);
-                changed = true;
-            }
-            if (!existingUser.getLastName().equals(lastName)) {
-                existingUser.setLastName(lastName);
-                changed = true;
-            }
-            if (changed) {
-                return userRepository.save(existingUser);
-            }
-            return existingUser;
+            existingUser.setLastName(lastName);
+            existingUser.setFirstName(firstName);
+            return userRepository.save(existingUser);
         } else {
             User newUser = new User();
             newUser.setEmail(email);

@@ -24,13 +24,13 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public User findUserByEmail(String email) {
-        return userService.findUserByEmail(email);
+    public Optional<User> findByEmail(String email) {
+        return userService.findByEmail(email);
     }
 
     @PostMapping("/users")
     public User createUser(@RequestBody User user){
-        return userService.createUser(user.getId(), user.getProvidedId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber());
+        return userService.createUser(user.getId(), user.getProviderId(), user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
     @DeleteMapping("/users")
@@ -46,7 +46,7 @@ public class UserController {
 
         String email = principal.getAttribute("email");
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<User> userOptional = userService.findByEmail(email);
 
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

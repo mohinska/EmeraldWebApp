@@ -33,6 +33,4 @@ public class User {
     @Column(name = "lastname")
     private String lastName;
     private String email;
-    @Column(name = "phonenumber")
-    private String phoneNumber;
 }
