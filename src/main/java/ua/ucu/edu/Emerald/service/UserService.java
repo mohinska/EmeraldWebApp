@@ -1,10 +1,12 @@
 package ua.ucu.edu.Emerald.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ua.ucu.edu.Emerald.entity.User;
 import ua.ucu.edu.Emerald.repository.UserRepository;
 
+@Service
 public class UserService {
     private UserRepository userRepository;
 
