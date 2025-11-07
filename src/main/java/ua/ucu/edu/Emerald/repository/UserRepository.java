@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query(value = "SELECT * FROM users WHERE email := email", nativeQuery = true)
-    Optional<User> findByEmail(String email);
+    @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
+    Optional<User> findUserByEmail(String email);
     void deleteByEmail(String email);
 }

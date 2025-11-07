@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import ua.ucu.edu.Emerald.entity.User;
 import ua.ucu.edu.Emerald.repository.UserRepository;
+import ua.ucu.edu.Emerald.service.UserService;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,10 +17,25 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/users")
+    public User findUserByEmail(String email) {
+        return userService.findUserByEmail(email);
+    }
+
+    @PostMapping("/users")
+    public User createUser(@RequestBody User user){
+        return userService.createUser(user.getId(), user.getProvidedId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber());
+    }
+
+    @DeleteMapping("/users")
+    public void deleteUser(@PathVariable String email) {
+        userService.deleteUser(email);
     }
 
     @GetMapping("/me")
