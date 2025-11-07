@@ -1,43 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-// Configure axios to send credentials (cookies) with every request
-const apiClient = axios.create({
-    baseURL: 'http://localhost:8080',
-    withCredentials: true, // This is essential!
-});
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import DashboardLayout from '../components/layout/DashboardLayout';
+import { DEFAULT_SIDEBAR_ITEMS } from '../constants/sidebarItems';
+import { useAuth } from '../hooks/useAuth';
+import Button from '../components/ui/Button';
+import PageHeader from '../components/ui/PageHeader';
 
 const Dashboard = () => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { loading, username } = useAuth();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        // This effect runs when the component mounts (after redirect)
-        apiClient.get('/api/users/me')
-            .then(response => {
-                setUser(response.data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error("Error fetching user:", error);
-                setLoading(false);
-                // You would redirect back to login here
-            });
-    }, []); // Empty dependency array means it runs once
+    const handleUpdateCV = () => {
+        // TODO: Implement CV update logic
+        console.log('Update CV clicked');
+    };
+
+    const handleSettings = () => {
+        navigate('/settings');
+    };
 
     if (loading) {
-        return <div>Loading user data...</div>;
+        return (
+            <DashboardLayout username={username} sidebarItems={DEFAULT_SIDEBAR_ITEMS}>
+                <div className="text-white font-pixel">Loading user data...</div>
+            </DashboardLayout>
+        );
     }
 
     return (
-        <div>
-            <h2>Dashboard</h2>
-            {user ? (
-                <pre>{JSON.stringify(user, null, 2)}</pre>
-            ) : (
-                <p>Could not load user data.</p>
-            )}
-        </div>
+        <DashboardLayout username={username} sidebarItems={DEFAULT_SIDEBAR_ITEMS}>
+            <div className="max-w-4xl">
+                <PageHeader title="Dashboard" />
+
+                <div className="flex gap-4">
+                    <Button
+                        variant="primary"
+                        size="lg"
+                        onClick={handleUpdateCV}
+                        className="flex-1"
+                    >
+                        Update CV
+                    </Button>
+                    <Button
+                        variant="gray"
+                        size="lg"
+                        onClick={handleSettings}
+                        className="flex-1"
+                    >
+                        Settings
+                    </Button>
+                </div>
+            </div>
+        </DashboardLayout>
     );
 };
 
