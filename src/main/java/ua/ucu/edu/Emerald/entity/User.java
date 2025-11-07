@@ -9,6 +9,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 public class User {
-    
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,4 +31,5 @@ public class User {
     private String email;
     @Column(name = "phonenumber")
     private String phoneNumber;
+    private Long id;
 }
