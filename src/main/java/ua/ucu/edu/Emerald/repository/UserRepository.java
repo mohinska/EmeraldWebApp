@@ -9,7 +9,7 @@ import ua.ucu.edu.Emerald.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query(value = "SELECT * FROM users WHERE email := email", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
     User findUserByEmail(String email);
     void deleteByEmail(String email);
 }

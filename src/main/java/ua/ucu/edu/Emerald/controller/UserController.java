@@ -18,17 +18,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public User findUserByEmail(String email) {
         return userService.findUserByEmail(email);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public User createUser(@RequestBody User user){
         return userService.createUser(user.getId(), user.getProvidedId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber());
     }
 
-    @DeleteMapping("/user")
+    @DeleteMapping("/users")
     public void deleteUser(@PathVariable String email) {
         userService.deleteUser(email);
     }
