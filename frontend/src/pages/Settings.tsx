@@ -135,6 +135,7 @@ const Settings = () => {
                                 containerClassName="mb-0"
                             />
                         </div>
+                    </Section>
                     </div>
 
                     {/* General Section */}
@@ -151,7 +152,6 @@ const Settings = () => {
                         </div>
                     </Section>
                 </div>
-            </div>
         </DashboardLayout>
     );
 };
