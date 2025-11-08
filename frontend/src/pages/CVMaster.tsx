@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
+
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { SidebarAction, SidebarCV } from '../components/navigation/Sidebar';
 import { DEFAULT_SIDEBAR_ITEMS } from '../constants/sidebarItems';
@@ -11,57 +12,46 @@ import PresentButton from '../components/ui/PresentButton';
 import PageHeader from '../components/ui/PageHeader';
 import Section from '../components/ui/Section';
 import Input from '../components/ui/Input';
+import { apiClient } from '../utils/apiClient';
 
-interface Experience {
-    id: string;
-    position: string;
-    company: string;
-    startDate: string;
-    endDate: string;
-    isPresent: boolean;
-}
-
-interface Education {
-    id: string;
-    universityName: string;
-    faculty: string;
-    degree: string;
-    startDate: string;
-    endDate: string;
-    isPresent: boolean;
-}
 
 const CVMaster = () => {
-    const { loading, username } = useAuth();
+    const { user, loading, username } = useAuth();
+    const [isSaving, setIsSaving] = useState(false);
 
-    // Form state
+
     const [title, setTitle] = useState('Position1');
-    const [name, setName] = useState('Test');
-    const [surname, setSurname] = useState('Test');
-    const [email, setEmail] = useState('example@gmail.com');
+    
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState('');
+    
     const [description, setDescription] = useState('я молодець візьміть на роботу\nиушимім\nфмцфвомуфміп\nкфумиф');
     const [linkedIn, setLinkedIn] = useState('httpfvfkfbf');
     const [github, setGithub] = useState('httpfvfkfbf');
-    const [experiences, setExperiences] = useState<Experience[]>([
-        { id: '1', position: 'soft dev', company: 'КУК', startDate: '2024', endDate: '', isPresent: true },
-    ]);
-    const [educations, setEducations] = useState<Education[]>([
-        { id: '1', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
-        { id: '2', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
-    ]);
-    const [skills, setSkills] = useState<string[]>([
-        'прикол++',
-        'bdfnbidf',
-        'прикол++',
-        'вмію варити макарони',
-        'прикол++',
-        'прикол++',
-        'прикол++',
-        'dsb;vubdsvu',
-        'прикол++',
-        'прикол++',
-    ]);
-    const [newSkill, setNewSkill] = useState('');
+    // const [experiences, setExperiences] = useState([
+    //     { id: '1', position: 'soft dev', company: 'КУК', startDate: '2024', endDate: '', isPresent: true },
+    // ]);
+    // const [educations, setEducations] = useState([
+    //     { id: '1', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
+    //     { id: '2', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
+    // ]);
+    // const [skills, setSkills] = useState<string[]>([
+    //     'прикол++',
+    //     'bdfnbidf',
+    //     // ... (інші навички)
+    // ]);
+    // const [newSkill, setNewSkill] = useState('');
+
+    useEffect(() => {
+        if (user) {
+            setName(user.first_name || '');
+            setSurname(user.last_name || '');
+            setEmail(user.email || '');
+
+        }
+    }, [user]); 
+
 
     const sidebarCVs: SidebarCV[] = [
         { id: '1', title: 'Position' },
@@ -69,59 +59,42 @@ const CVMaster = () => {
         { id: '3', title: 'ololo' },
     ];
 
-    const handleSave = () => {
-        console.log('Saving CV:', {
-            title,
-            name,
-            surname,
-            email,
-            description,
-            linkedIn,
-            github,
-            experiences,
-            educations,
-            skills,
-        });
-        // TODO: Implement save logic
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            const cvData = {
+                title,
+                name,
+                surname,
+                email,
+                description,
+                linkedIn,
+                github,
+                // experiences,
+                // educations,
+                // skills,
+            };
+            
+            console.log('Відправляємо CV на бекенд:', cvData);
+            
+            const response = await apiClient.post('/api/cv', cvData); 
+            
+            console.log('CV успішно збережено!', response.data);
+            
+        } catch (error) {
+            console.error('Помилка при збереженні CV:', error);
+        } finally {
+            setIsSaving(false);
+        }
     };
 
-    const handleExportPDF = () => {
-        console.log('Exporting to PDF');
-        // TODO: Implement PDF export
-    };
-
-    const handleExportHTML = () => {
-        console.log('Exporting to HTML');
-        // TODO: Implement HTML export
-    };
-
-    const handleCancel = () => {
-        // TODO: Reset form or navigate
-    };
-
-    const handleNewCV = () => {
-        // Reset form
-        setTitle('');
-        setName('');
-        setSurname('');
-        setEmail('');
-        setDescription('');
-        setLinkedIn('');
-        setGithub('');
-        setExperiences([]);
-        setEducations([]);
-        setSkills([]);
-    };
-
-    const handleAIGenerator = () => {
-        console.log('AI Generator clicked');
-        // TODO: Implement AI generator
-    };
-
-    const handleCVSelect = (cvId: string) => {
-        console.log('Selecting CV:', cvId);
-        // TODO: Load CV data
-    };
+    
+    function handleExportPDF() { console.log('Exporting PDF'); }
+    function handleExportHTML() { console.log('Exporting HTML'); }
+    function handleCancel() { console.log('Cancel'); }
+    function handleNewCV() { console.log('New CV'); }
+    function handleAIGenerator() { console.log('AI Generator'); }
+    function handleCVSelect(id: string) { console.log('Select CV', id); }
 
     const sidebarActions: SidebarAction[] = [
         { label: 'Save', onClick: handleSave, variant: 'primary' },
@@ -130,59 +103,59 @@ const CVMaster = () => {
         { label: 'Cancel', onClick: handleCancel, variant: 'gray' },
     ];
 
-    function addExperience() {
-        setExperiences([...experiences, {
-            id: Date.now().toString(),
-            position: '',
-            company: '',
-            startDate: '',
-            endDate: '',
-            isPresent: false,
-        }]);
-    }
+    // function addExperience() {
+    //     setExperiences([...experiences, {
+    //         id: Date.now().toString(),
+    //         position: '',
+    //         company: '',
+    //         startDate: '',
+    //         endDate: '',
+    //         isPresent: false,
+    //     }]);
+    // }
 
-    function removeExperience(id: string) {
-        setExperiences(experiences.filter(exp => exp.id !== id));
-    }
+//     function removeExperience(id: string) {
+//         setExperiences(experiences.filter(exp => exp.id !== id));
+//     }
 
-    function updateExperience(id: string, field: keyof Experience, value: any) {
-        setExperiences(experiences.map(exp =>
-            exp.id === id ? { ...exp, [field]: value } : exp
-        ));
-    }
+//     function updateExperience(id: string, field: keyof Experience, value: any) {
+//         setExperiences(experiences.map(exp =>
+//             exp.id === id ? { ...exp, [field]: value } : exp
+//         ));
+//     }
 
-    function addEducation() {
-        setEducations([...educations, {
-            id: Date.now().toString(),
-            universityName: '',
-            faculty: '',
-            degree: '',
-            startDate: '',
-            endDate: '',
-            isPresent: false,
-        }]);
-    }
+//     function addEducation() {
+//         setEducations([...educations, {
+//             id: Date.now().toString(),
+//             universityName: '',
+//             faculty: '',
+//             degree: '',
+//             startDate: '',
+// endDate: '',
+//             isPresent: false,
+//         }]);
+//     }
 
-    function removeEducation(id: string) {
-        setEducations(educations.filter(edu => edu.id !== id));
-    }
+//     function removeEducation(id: string) {
+//         setEducations(educations.filter(edu => edu.id !== id));
+//     }
 
-    function updateEducation(id: string, field: keyof Education, value: any) {
-        setEducations(educations.map(edu =>
-            edu.id === id ? { ...edu, [field]: value } : edu
-        ));
-    }
+//     function updateEducation(id: string, field: keyof Education, value: any) {
+//         setEducations(educations.map(edu =>
+//             edu.id === id ? { ...edu, [field]: value } : edu
+//         ));
+//     }
 
-    function addSkill() {
-        if (newSkill.trim()) {
-            setSkills([...skills, newSkill.trim()]);
-            setNewSkill('');
-        }
-    }
+// function addSkill() {
+//         if (newSkill.trim()) {
+//             setSkills([...skills, newSkill.trim()]);
+//             setNewSkill('');
+//         }
+//     }
 
-    function removeSkill(index: number) {
-        setSkills(skills.filter((_, i) => i !== index));
-    }
+    // function removeSkill(index: number) {
+    //     setSkills(skills.filter((_, i) => i !== index));
+    // }
 
     if (loading) {
         return (
@@ -234,7 +207,7 @@ const CVMaster = () => {
                                 name="name"
                                 label="Name"
                                 type="text"
-                                value={name}
+                                value={name} // <-- Тепер тут будуть дані з useAuth
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Test"
                             />
@@ -242,7 +215,7 @@ const CVMaster = () => {
                                 name="surname"
                                 label="Surname"
                                 type="text"
-                                value={surname}
+                                value={surname} // <-- Тепер тут будуть дані з useAuth
                                 onChange={(e) => setSurname(e.target.value)}
                                 placeholder="Test"
                             />
@@ -250,7 +223,7 @@ const CVMaster = () => {
                                 name="email"
                                 label="Email"
                                 type="email"
-                                value={email}
+                                value={email} // <-- Тепер тут будуть дані з useAuth
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="example@gmail.com"
                             />
@@ -289,7 +262,7 @@ const CVMaster = () => {
                     </Section>
 
                     {/* Experience Section */}
-                    <Section title="Experience">
+                    {/* <Section title="Experience">
                         <div className="space-y-6">
                             {experiences.map((exp) => (
                                 <div key={exp.id} className="border border-white rounded p-4 space-y-4 shadow-emerald">
@@ -332,8 +305,8 @@ const CVMaster = () => {
                                                             }
                                                         }}
                                                     />
-                                                </div>
-                                                {!exp.isPresent && (
+                                                </div> */}
+                                                {/* {!exp.isPresent && (
                                                     <FormField
                                                         name={`exp-end-${exp.id}`}
                                                         label=""
@@ -343,10 +316,10 @@ const CVMaster = () => {
                                                         placeholder="2025"
                                                         containerClassName="flex-1 mb-0"
                                                     />
-                                                )}
-                                            </div>
-                                        </div>
-                                        {experiences.length > 1 && (
+                                                )} */}
+                                            {/* </div>
+                                        </div> */}
+                                        {/* {experiences.length > 1 && (
                                             <button
                                                 type="button"
                                                 onClick={() => removeExperience(exp.id)}
@@ -354,17 +327,17 @@ const CVMaster = () => {
                                             >
                                                 ×
                                             </button>
-                                        )}
-                                    </div>
+                                        )} */}
+                                    {/* </div>
                                 </div>
                             ))}
                             <Button variant="outline" onClick={addExperience}>
                                 + Add experience
                             </Button>
                         </div>
-                    </Section>
+                    </Section> */}
 
-                    {/* Education Sections */}
+                    {/* Education Sections
                     {educations.map((edu, eduIndex) => (
                         <div key={edu.id}>
                             <h2 className="text-white text-2xl font-heading mb-4">Education</h2>
@@ -447,10 +420,10 @@ const CVMaster = () => {
                                 </Button>
                             )}
                         </div>
-                    ))}
+                    ))} */}
 
                     {/* Skills Section */}
-                    <div>
+                    {/* <div>
                         <h2 className="text-white text-2xl font-heading mb-4">Skills</h2>
                         <div className="flex flex-wrap gap-2 mb-4">
                             {skills.map((skill, index) => (
@@ -478,7 +451,7 @@ const CVMaster = () => {
                                 + Add skill
                             </Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </DashboardLayout>
@@ -486,4 +459,3 @@ const CVMaster = () => {
 };
 
 export default CVMaster;
-
