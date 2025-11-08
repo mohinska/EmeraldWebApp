@@ -1,6 +1,11 @@
 {
   "name": "emerald-frontend",
-  "type": "module",
+  "jest": {
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\](?!axios).+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ]
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
