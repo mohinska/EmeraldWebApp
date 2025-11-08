@@ -2,3 +2,4 @@
 .vscode/
 target/
 application-local.properties
+docker-compose.override.yml
