@@ -35,36 +35,28 @@ const CVMaster = () => {
     const { loading, username } = useAuth();
 
     // Form state
-    const [title, setTitle] = useState('Position1');
-    const [name, setName] = useState('Test');
-    const [surname, setSurname] = useState('Test');
-    const [email, setEmail] = useState('example@gmail.com');
-    const [description, setDescription] = useState('я молодець візьміть на роботу\nиушимім\nфмцфвомуфміп\nкфумиф');
+    const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState('');
+    const [description, setDescription] = useState('');
     const [linkedIn, setLinkedIn] = useState('httpfvfkfbf');
     const [github, setGithub] = useState('httpfvfkfbf');
     const [experiences, setExperiences] = useState<Experience[]>([
-        { id: '1', position: 'soft dev', company: 'КУК', startDate: '2024', endDate: '', isPresent: true },
+        { id: '1', position: 'Software Developer', company: 'UCU', startDate: '2024', endDate: '', isPresent: true },
     ]);
     const [educations, setEducations] = useState<Education[]>([
-        { id: '1', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
-        { id: '2', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
+        { id: '1', universityName: 'UCU', faculty: 'APPS', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
+        { id: '2', universityName: 'UCU', faculty: 'APPS', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
     ]);
     const [skills, setSkills] = useState<string[]>([
         'прикол++',
-        'bdfnbidf',
-        'прикол++',
         'вмію варити макарони',
-        'прикол++',
-        'прикол++',
-        'прикол++',
-        'dsb;vubdsvu',
-        'прикол++',
-        'прикол++',
     ]);
     const [newSkill, setNewSkill] = useState('');
 
     const sidebarCVs: SidebarCV[] = [
-        { id: '1', title: 'Position' },
+        { id: '1', title: 'EPAM Application' },
         { id: '2', title: 'ololo' },
         { id: '3', title: 'ololo' },
     ];

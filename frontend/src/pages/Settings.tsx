@@ -60,10 +60,7 @@ const Settings = () => {
         },
         {
             label: 'Logout',
-            onClick: () => {
-                logout();
-                console.log('User logged out');
-            },
+            onClick: logout,
             variant: 'secondary',
         },
     ];

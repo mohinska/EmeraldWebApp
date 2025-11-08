@@ -15,8 +15,14 @@ export const useAuth = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const logout = () => {
-        setUser(null);
+    const logout = async () => {
+        try {
+            await apiClient.post('/api/logout', {});
+            setUser(null);
+            navigate('/login');
+        } catch (err) {
+            console.error('Logout failed', err);
+        }
     };
 
     useEffect(() => {
