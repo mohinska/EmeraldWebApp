@@ -27,8 +27,8 @@ const CVMaster = () => {
     const [email, setEmail] = useState('');
     
     const [description, setDescription] = useState('я молодець візьміть на роботу\nиушимім\nфмцфвомуфміп\nкфумиф');
-    const [linkedIn, setLinkedIn] = useState('httpfvfkfbf');
-    const [github, setGithub] = useState('httpfvfkfbf');
+    const [linkedIn, setLinkedIn] = useState('my linkedin');
+    const [github, setGithub] = useState('my github');
     // const [experiences, setExperiences] = useState([
     //     { id: '1', position: 'soft dev', company: 'КУК', startDate: '2024', endDate: '', isPresent: true },
     // ]);
