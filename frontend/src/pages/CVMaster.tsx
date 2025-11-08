@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
+
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { SidebarAction, SidebarCV } from '../components/navigation/Sidebar';
 import { DEFAULT_SIDEBAR_ITEMS } from '../constants/sidebarItems';
@@ -32,13 +33,18 @@ interface Education {
 }
 
 const CVMaster = () => {
-    const { loading, username } = useAuth();
+    // 2. Дістаємо 'user' з useAuth()
+    const { user, loading, username } = useAuth();
 
     // Form state
     const [title, setTitle] = useState('Position1');
-    const [name, setName] = useState('Test');
-    const [surname, setSurname] = useState('Test');
-    const [email, setEmail] = useState('example@gmail.com');
+    
+    // 3. Змінюємо 'Test' на порожні рядки, чекаючи на дані
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState('');
+    
+    // (Ці дані специфічні для CV, їх залишаємо)
     const [description, setDescription] = useState('я молодець візьміть на роботу\nиушимім\nфмцфвомуфміп\nкфумиф');
     const [linkedIn, setLinkedIn] = useState('httpfvfkfbf');
     const [github, setGithub] = useState('httpfvfkfbf');
@@ -52,16 +58,22 @@ const CVMaster = () => {
     const [skills, setSkills] = useState<string[]>([
         'прикол++',
         'bdfnbidf',
-        'прикол++',
-        'вмію варити макарони',
-        'прикол++',
-        'прикол++',
-        'прикол++',
-        'dsb;vubdsvu',
-        'прикол++',
-        'прикол++',
+        // ... (інші навички)
     ]);
     const [newSkill, setNewSkill] = useState('');
+
+    // 4. Додаємо той самий useEffect, що й у Settings
+    useEffect(() => {
+        if (user) {
+            setName(user.first_name || '');
+            setSurname(user.last_name || '');
+            setEmail(user.email || '');
+            // Інші дані (description, linkedIn, etc.) не є частиною 
+            // об'єкта 'user', тому ми їх не чіпаємо.
+            // Вони будуть завантажуватись/зберігатись окремо для CV.
+        }
+    }, [user]); // <-- Реагуємо на завантаження 'user'
+
 
     const sidebarCVs: SidebarCV[] = [
         { id: '1', title: 'Position' },
@@ -71,57 +83,18 @@ const CVMaster = () => {
 
     const handleSave = () => {
         console.log('Saving CV:', {
-            title,
-            name,
-            surname,
-            email,
-            description,
-            linkedIn,
-            github,
-            experiences,
-            educations,
-            skills,
+            // ... (дані форми)
         });
-        // TODO: Implement save logic
     };
 
-    const handleExportPDF = () => {
-        console.log('Exporting to PDF');
-        // TODO: Implement PDF export
-    };
-
-    const handleExportHTML = () => {
-        console.log('Exporting to HTML');
-        // TODO: Implement HTML export
-    };
-
-    const handleCancel = () => {
-        // TODO: Reset form or navigate
-    };
-
-    const handleNewCV = () => {
-        // Reset form
-        setTitle('');
-        setName('');
-        setSurname('');
-        setEmail('');
-        setDescription('');
-        setLinkedIn('');
-        setGithub('');
-        setExperiences([]);
-        setEducations([]);
-        setSkills([]);
-    };
-
-    const handleAIGenerator = () => {
-        console.log('AI Generator clicked');
-        // TODO: Implement AI generator
-    };
-
-    const handleCVSelect = (cvId: string) => {
-        console.log('Selecting CV:', cvId);
-        // TODO: Load CV data
-    };
+    // ... (решта ваших функцій handleExportPDF, addExperience, addSkill, ...)
+    
+    function handleExportPDF() { console.log('Exporting PDF'); }
+    function handleExportHTML() { console.log('Exporting HTML'); }
+    function handleCancel() { console.log('Cancel'); }
+    function handleNewCV() { console.log('New CV'); }
+    function handleAIGenerator() { console.log('AI Generator'); }
+    function handleCVSelect(id: string) { console.log('Select CV', id); }
 
     const sidebarActions: SidebarAction[] = [
         { label: 'Save', onClick: handleSave, variant: 'primary' },
@@ -158,7 +131,7 @@ const CVMaster = () => {
             faculty: '',
             degree: '',
             startDate: '',
-            endDate: '',
+endDate: '',
             isPresent: false,
         }]);
     }
@@ -173,7 +146,7 @@ const CVMaster = () => {
         ));
     }
 
-    function addSkill() {
+function addSkill() {
         if (newSkill.trim()) {
             setSkills([...skills, newSkill.trim()]);
             setNewSkill('');
@@ -234,7 +207,7 @@ const CVMaster = () => {
                                 name="name"
                                 label="Name"
                                 type="text"
-                                value={name}
+                                value={name} // <-- Тепер тут будуть дані з useAuth
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Test"
                             />
@@ -242,7 +215,7 @@ const CVMaster = () => {
                                 name="surname"
                                 label="Surname"
                                 type="text"
-                                value={surname}
+                                value={surname} // <-- Тепер тут будуть дані з useAuth
                                 onChange={(e) => setSurname(e.target.value)}
                                 placeholder="Test"
                             />
@@ -250,7 +223,7 @@ const CVMaster = () => {
                                 name="email"
                                 label="Email"
                                 type="email"
-                                value={email}
+                                value={email} // <-- Тепер тут будуть дані з useAuth
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="example@gmail.com"
                             />
@@ -486,4 +459,3 @@ const CVMaster = () => {
 };
 
 export default CVMaster;
-
