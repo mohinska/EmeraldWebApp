@@ -26,7 +26,7 @@ const CVMaster = () => {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     
-    const [description, setDescription] = useState('я молодець візьміть на роботу\nиушимім\nфмцфвомуфміп\nкфумиф');
+    const [description, setDescription] = useState('я молодець візьміть на роботу');
     const [linkedIn, setLinkedIn] = useState('my linkedin');
     const [github, setGithub] = useState('my github');
     // const [experiences, setExperiences] = useState([
@@ -54,9 +54,8 @@ const CVMaster = () => {
 
 
     const sidebarCVs: SidebarCV[] = [
-        { id: '1', title: 'Position' },
-        { id: '2', title: 'ololo' },
-        { id: '3', title: 'ololo' },
+        { id: '1', title: 'My CV' },
+
     ];
 
     const handleSave = async () => {
