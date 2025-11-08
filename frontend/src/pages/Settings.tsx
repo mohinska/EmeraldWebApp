@@ -10,7 +10,7 @@ import PageHeader from '../components/ui/PageHeader';
 import Section from '../components/ui/Section';
 
 const Settings = () => {
-    const { user, loading, username } = useAuth();
+    const { user, loading, username, logout } = useAuth();
 
     // Form state
     const [name, setName] = useState('');
@@ -23,7 +23,6 @@ const Settings = () => {
     const languageOptions: SelectOption[] = [
         { value: 'ukrainian', label: 'державна' },
         { value: 'english', label: 'English' },
-        { value: 'russian', label: 'Русский' },
     ];
 
     const handleSave = () => {
@@ -58,6 +57,14 @@ const Settings = () => {
             label: 'Cancel',
             onClick: handleCancel,
             variant: 'gray',
+        },
+        {
+            label: 'Logout',
+            onClick: () => {
+                logout();
+                console.log('User logged out');
+            },
+            variant: 'secondary',
         },
     ];
 
@@ -157,4 +164,3 @@ const Settings = () => {
 };
 
 export default Settings;
-

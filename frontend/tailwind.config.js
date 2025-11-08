@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       colors: {
         'emerald-dark': '#272B2C',
-        'emerald-gray': '#272B2C', // Суміщені кольори
+        'emerald-gray': '#272B2C',
         'emerald-green': '#15AB33',
       },
       boxShadow: {

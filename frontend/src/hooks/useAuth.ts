@@ -15,6 +15,10 @@ export const useAuth = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    const logout = () => {
+        setUser(null);
+    };
+
     useEffect(() => {
         apiClient.get('/api/users/me')
             .then(response => {
@@ -30,6 +34,5 @@ export const useAuth = () => {
 
     const username = user?.first_name || user?.email || 'User';
 
-    return { user, loading, username };
+    return { user, loading, username, logout };
 };
-
