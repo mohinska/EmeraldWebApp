@@ -44,7 +44,7 @@ const Login: React.FC = () => {
                     className="mb-6"
                 />
 
-                <Separator color="white" className="mb-6" />
+                {/* <Separator color="white" className="mb-6" />
 
                 <form onSubmit={handleSubmit}>
                     <FormField
@@ -85,7 +85,7 @@ const Login: React.FC = () => {
                     to="/register"
                     text="Don't have an account?"
                     linkText="Register"
-                />
+                /> */}
             </AuthForm>
         </PageLayout>
     );

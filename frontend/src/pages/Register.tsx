@@ -109,7 +109,7 @@ const Register: React.FC = () => {
                     className="mb-6"
                 />
 
-                <Separator color="white" className="mb-6" />
+                {/* <Separator color="white" className="mb-6" />
 
                 <form onSubmit={handleSubmit}>
                     <FormField
@@ -186,7 +186,7 @@ const Register: React.FC = () => {
                     to="/login"
                     text="Already registered?"
                     linkText="Sign in"
-                />
+                /> */}
             </AuthForm>
         </PageLayout>
     );
