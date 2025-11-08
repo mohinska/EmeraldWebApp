@@ -12,67 +12,45 @@ import PresentButton from '../components/ui/PresentButton';
 import PageHeader from '../components/ui/PageHeader';
 import Section from '../components/ui/Section';
 import Input from '../components/ui/Input';
+import { apiClient } from '../utils/apiClient';
 
-interface Experience {
-    id: string;
-    position: string;
-    company: string;
-    startDate: string;
-    endDate: string;
-    isPresent: boolean;
-}
-
-interface Education {
-    id: string;
-    universityName: string;
-    faculty: string;
-    degree: string;
-    startDate: string;
-    endDate: string;
-    isPresent: boolean;
-}
 
 const CVMaster = () => {
-    // 2. Дістаємо 'user' з useAuth()
     const { user, loading, username } = useAuth();
+    const [isSaving, setIsSaving] = useState(false);
 
-    // Form state
+
     const [title, setTitle] = useState('Position1');
     
-    // 3. Змінюємо 'Test' на порожні рядки, чекаючи на дані
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     
-    // (Ці дані специфічні для CV, їх залишаємо)
     const [description, setDescription] = useState('я молодець візьміть на роботу\nиушимім\nфмцфвомуфміп\nкфумиф');
     const [linkedIn, setLinkedIn] = useState('httpfvfkfbf');
     const [github, setGithub] = useState('httpfvfkfbf');
-    const [experiences, setExperiences] = useState<Experience[]>([
-        { id: '1', position: 'soft dev', company: 'КУК', startDate: '2024', endDate: '', isPresent: true },
-    ]);
-    const [educations, setEducations] = useState<Education[]>([
-        { id: '1', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
-        { id: '2', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
-    ]);
-    const [skills, setSkills] = useState<string[]>([
-        'прикол++',
-        'bdfnbidf',
-        // ... (інші навички)
-    ]);
-    const [newSkill, setNewSkill] = useState('');
+    // const [experiences, setExperiences] = useState([
+    //     { id: '1', position: 'soft dev', company: 'КУК', startDate: '2024', endDate: '', isPresent: true },
+    // ]);
+    // const [educations, setEducations] = useState([
+    //     { id: '1', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
+    //     { id: '2', universityName: 'КУК', faculty: 'КУК', degree: 'Master', startDate: '2024', endDate: '', isPresent: true },
+    // ]);
+    // const [skills, setSkills] = useState<string[]>([
+    //     'прикол++',
+    //     'bdfnbidf',
+    //     // ... (інші навички)
+    // ]);
+    // const [newSkill, setNewSkill] = useState('');
 
-    // 4. Додаємо той самий useEffect, що й у Settings
     useEffect(() => {
         if (user) {
             setName(user.first_name || '');
             setSurname(user.last_name || '');
             setEmail(user.email || '');
-            // Інші дані (description, linkedIn, etc.) не є частиною 
-            // об'єкта 'user', тому ми їх не чіпаємо.
-            // Вони будуть завантажуватись/зберігатись окремо для CV.
+
         }
-    }, [user]); // <-- Реагуємо на завантаження 'user'
+    }, [user]); 
 
 
     const sidebarCVs: SidebarCV[] = [
@@ -81,13 +59,35 @@ const CVMaster = () => {
         { id: '3', title: 'ololo' },
     ];
 
-    const handleSave = () => {
-        console.log('Saving CV:', {
-            // ... (дані форми)
-        });
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            const cvData = {
+                title,
+                name,
+                surname,
+                email,
+                description,
+                linkedIn,
+                github,
+                // experiences,
+                // educations,
+                // skills,
+            };
+            
+            console.log('Відправляємо CV на бекенд:', cvData);
+            
+            await apiClient.post('/api/cvs', cvData); 
+            
+            console.log('CV успішно збережено!');
+            
+        } catch (error) {
+            console.error('Помилка при збереженні CV:', error);
+        } finally {
+            setIsSaving(false); // Вимикаємо індикатор завантаження
+        }
     };
 
-    // ... (решта ваших функцій handleExportPDF, addExperience, addSkill, ...)
     
     function handleExportPDF() { console.log('Exporting PDF'); }
     function handleExportHTML() { console.log('Exporting HTML'); }
@@ -103,59 +103,59 @@ const CVMaster = () => {
         { label: 'Cancel', onClick: handleCancel, variant: 'gray' },
     ];
 
-    function addExperience() {
-        setExperiences([...experiences, {
-            id: Date.now().toString(),
-            position: '',
-            company: '',
-            startDate: '',
-            endDate: '',
-            isPresent: false,
-        }]);
-    }
+    // function addExperience() {
+    //     setExperiences([...experiences, {
+    //         id: Date.now().toString(),
+    //         position: '',
+    //         company: '',
+    //         startDate: '',
+    //         endDate: '',
+    //         isPresent: false,
+    //     }]);
+    // }
 
-    function removeExperience(id: string) {
-        setExperiences(experiences.filter(exp => exp.id !== id));
-    }
+//     function removeExperience(id: string) {
+//         setExperiences(experiences.filter(exp => exp.id !== id));
+//     }
 
-    function updateExperience(id: string, field: keyof Experience, value: any) {
-        setExperiences(experiences.map(exp =>
-            exp.id === id ? { ...exp, [field]: value } : exp
-        ));
-    }
+//     function updateExperience(id: string, field: keyof Experience, value: any) {
+//         setExperiences(experiences.map(exp =>
+//             exp.id === id ? { ...exp, [field]: value } : exp
+//         ));
+//     }
 
-    function addEducation() {
-        setEducations([...educations, {
-            id: Date.now().toString(),
-            universityName: '',
-            faculty: '',
-            degree: '',
-            startDate: '',
-endDate: '',
-            isPresent: false,
-        }]);
-    }
+//     function addEducation() {
+//         setEducations([...educations, {
+//             id: Date.now().toString(),
+//             universityName: '',
+//             faculty: '',
+//             degree: '',
+//             startDate: '',
+// endDate: '',
+//             isPresent: false,
+//         }]);
+//     }
 
-    function removeEducation(id: string) {
-        setEducations(educations.filter(edu => edu.id !== id));
-    }
+//     function removeEducation(id: string) {
+//         setEducations(educations.filter(edu => edu.id !== id));
+//     }
 
-    function updateEducation(id: string, field: keyof Education, value: any) {
-        setEducations(educations.map(edu =>
-            edu.id === id ? { ...edu, [field]: value } : edu
-        ));
-    }
+//     function updateEducation(id: string, field: keyof Education, value: any) {
+//         setEducations(educations.map(edu =>
+//             edu.id === id ? { ...edu, [field]: value } : edu
+//         ));
+//     }
 
-function addSkill() {
-        if (newSkill.trim()) {
-            setSkills([...skills, newSkill.trim()]);
-            setNewSkill('');
-        }
-    }
+// function addSkill() {
+//         if (newSkill.trim()) {
+//             setSkills([...skills, newSkill.trim()]);
+//             setNewSkill('');
+//         }
+//     }
 
-    function removeSkill(index: number) {
-        setSkills(skills.filter((_, i) => i !== index));
-    }
+    // function removeSkill(index: number) {
+    //     setSkills(skills.filter((_, i) => i !== index));
+    // }
 
     if (loading) {
         return (
@@ -262,7 +262,7 @@ function addSkill() {
                     </Section>
 
                     {/* Experience Section */}
-                    <Section title="Experience">
+                    {/* <Section title="Experience">
                         <div className="space-y-6">
                             {experiences.map((exp) => (
                                 <div key={exp.id} className="border border-white rounded p-4 space-y-4 shadow-emerald">
@@ -305,8 +305,8 @@ function addSkill() {
                                                             }
                                                         }}
                                                     />
-                                                </div>
-                                                {!exp.isPresent && (
+                                                </div> */}
+                                                {/* {!exp.isPresent && (
                                                     <FormField
                                                         name={`exp-end-${exp.id}`}
                                                         label=""
@@ -316,10 +316,10 @@ function addSkill() {
                                                         placeholder="2025"
                                                         containerClassName="flex-1 mb-0"
                                                     />
-                                                )}
-                                            </div>
-                                        </div>
-                                        {experiences.length > 1 && (
+                                                )} */}
+                                            {/* </div>
+                                        </div> */}
+                                        {/* {experiences.length > 1 && (
                                             <button
                                                 type="button"
                                                 onClick={() => removeExperience(exp.id)}
@@ -327,17 +327,17 @@ function addSkill() {
                                             >
                                                 ×
                                             </button>
-                                        )}
-                                    </div>
+                                        )} */}
+                                    {/* </div>
                                 </div>
                             ))}
                             <Button variant="outline" onClick={addExperience}>
                                 + Add experience
                             </Button>
                         </div>
-                    </Section>
+                    </Section> */}
 
-                    {/* Education Sections */}
+                    {/* Education Sections
                     {educations.map((edu, eduIndex) => (
                         <div key={edu.id}>
                             <h2 className="text-white text-2xl font-heading mb-4">Education</h2>
@@ -420,10 +420,10 @@ function addSkill() {
                                 </Button>
                             )}
                         </div>
-                    ))}
+                    ))} */}
 
                     {/* Skills Section */}
-                    <div>
+                    {/* <div>
                         <h2 className="text-white text-2xl font-heading mb-4">Skills</h2>
                         <div className="flex flex-wrap gap-2 mb-4">
                             {skills.map((skill, index) => (
@@ -451,7 +451,7 @@ function addSkill() {
                                 + Add skill
                             </Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </DashboardLayout>

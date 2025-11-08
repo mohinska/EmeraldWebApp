@@ -18,10 +18,8 @@ const Login: React.FC = () => {
         setIsLoading(true);
 
         try {
-            // Handle login logic here
             console.log('Login attempt:', { email, password });
-            // TODO: Implement actual login API call
-            // await loginUser(email, password);
+
         } catch (error) {
             console.error('Login error:', error);
         } finally {
@@ -31,7 +29,6 @@ const Login: React.FC = () => {
 
     const handleGoogleSignIn = () => {
         setIsGoogleLoading(true);
-        // Redirect to Google OAuth
         window.location.href = 'http://localhost:8080/oauth2/authorization/google';
     };
 

@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import ua.ucu.edu.Emerald.entity.User;
-import ua.ucu.edu.Emerald.repository.UserRepository;
 import ua.ucu.edu.Emerald.service.UserService;
 
 import java.util.HashMap;
