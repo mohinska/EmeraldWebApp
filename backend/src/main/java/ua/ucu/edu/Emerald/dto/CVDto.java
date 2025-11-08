@@ -12,7 +12,7 @@ public class CVDto {
     private String description;
     private String linkedIn;
     private String github;
-    private String experience;
-    private String education;
-    private List<String> skills;
+    // private String experience;
+    // private String education;
+    // private List<String> skills;
 }

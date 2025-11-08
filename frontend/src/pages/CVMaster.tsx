@@ -77,9 +77,9 @@ const CVMaster = () => {
             
             console.log('Відправляємо CV на бекенд:', cvData);
             
-            await apiClient.post('/api/cv', cvData); 
+            const response = await apiClient.post('/api/cv', cvData); 
             
-            console.log('CV успішно збережено!');
+            console.log('CV успішно збережено!', response.data);
             
         } catch (error) {
             console.error('Помилка при збереженні CV:', error);

@@ -1,6 +1,8 @@
 package ua.ucu.edu.Emerald.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import ua.ucu.edu.Emerald.dto.CVDto;
 import ua.ucu.edu.Emerald.entity.CV;
@@ -17,9 +19,9 @@ public class CVController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveCv(@RequestBody CVDto cvDto , @RequestParam String email) {
+    public ResponseEntity<?> saveCv(@RequestBody CVDto cvDto , @AuthenticationPrincipal OAuth2User principal) {
         try {
-            CV savedCv = cvService.saveCv(cvDto, email);
+            CV savedCv = cvService.saveCv(cvDto, principal.getAttribute("email"));
             
             return ResponseEntity.status(201).body(savedCv);
             

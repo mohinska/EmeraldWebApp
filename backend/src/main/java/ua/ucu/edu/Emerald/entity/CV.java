@@ -9,8 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "cv")
 @Data
@@ -30,6 +34,7 @@ public class CV {
     private String email;
     @Column(columnDefinition = "TEXT")
     private String description;
+    @Column(name = "linkedin")
     private String linkedIn;
     private String github;
 
