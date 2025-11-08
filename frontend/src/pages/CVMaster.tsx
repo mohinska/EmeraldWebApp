@@ -77,14 +77,14 @@ const CVMaster = () => {
             
             console.log('Відправляємо CV на бекенд:', cvData);
             
-            await apiClient.post('/api/cvs', cvData); 
+            await apiClient.post('/api/cv', cvData); 
             
             console.log('CV успішно збережено!');
             
         } catch (error) {
             console.error('Помилка при збереженні CV:', error);
         } finally {
-            setIsSaving(false); // Вимикаємо індикатор завантаження
+            setIsSaving(false);
         }
     };
 
